@@ -29,12 +29,16 @@ jobs:
         git commit -m "Update appVersion in index.html"
         git tag -a "v${{ steps.read_version.outputs.app_version }}" -m "Version v${{ steps.read_version.outputs.app_version }}"
 
-    - name: Push changes and tag
+    - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.MY_GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: develop
-        tags: 'v${{ steps.read_version.outputs.app_version }}'
+
+    - name: Push Tag
+      uses: mathieudutour/github-tag-action@v5.5
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build Docker image
       run: docker build -t testNginx .
