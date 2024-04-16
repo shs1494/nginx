@@ -35,7 +35,7 @@ jobs:
         github_token: ${{ secrets.MY_GITHUB_TOKEN }}
         branch: develop
         tags: |
-          v${{ steps.read_version.outputs.app_version }}
+          "v${{ steps.read_version.outputs.app_version }}"
 
     - name: Build Docker image
       run: docker build -t testNginx .
