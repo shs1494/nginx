@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-    - name: create-tag
+    - name: checkout
       uses: actions/checkout@v3
 
     - name: Read appVersion from Chart.yaml
@@ -23,8 +23,6 @@ jobs:
 
     - name: Commit change
       run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@users.noreply.github.com'
         git add index.html
         git commit -m "Update appVersion in index.html"
         git tag -a "v${{ steps.read_version.outputs.app_version }}" -m "Version v${{ steps.read_version.outputs.app_version }}"
