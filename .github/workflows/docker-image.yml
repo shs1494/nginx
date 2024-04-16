@@ -11,12 +11,12 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-    - name: create-tage
+    - name: create-tag
       uses: actions/checkout@v3
 
     - name: Read appVersion from Chart.yaml
       id: read_version
-      run: echo "::set-output name=app_version::$(grep 'appVersion testchart/Chart.yaml | cut -d '"' -f 2)"
+      run: echo "::set-output name=app_version::$(grep 'appVersion' testchart/Chart.yaml | cut -d '"' -f 2)"
 
     - name: Replace appVersion in index.html
       run: sed -e "s/.*/${{ steps.read_version.outputs.app_version }}/d" index.html
