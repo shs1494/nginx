@@ -32,13 +32,13 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.MY_GITHUB_TOKEN }}
         branch: develop
 
     - name: Push Tag
       uses: mathieudutour/github-tag-action@v5.5
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.MY_GITHUB_TOKEN }}
 
     - name: Build Docker image
       run: docker build -t testNginx .
