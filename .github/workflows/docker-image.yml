@@ -19,7 +19,7 @@ jobs:
       run: echo "::set-output name=app_version::$(grep 'appVersion' testchart/Chart.yaml | cut -d '"' -f 2)"
 
     - name: Replace appVersion in index.html
-      run: sed -e "s/.*/${{ steps.read_version.outputs.app_version }}/d" index.html
+      run: sed -e "s/.*/${{ steps.read_version.outputs.app_version }}/" index.html
 
     - name: Commit chnage
       run: |
