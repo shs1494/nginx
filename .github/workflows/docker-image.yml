@@ -40,7 +40,7 @@ jobs:
       run: docker build -t ${{ secrets.NCR_URL }}/cd-jenkins/nginx:${{ steps.read_version.outputs.app_version }} .
 
     - name: Login to Private Docker registry
-      run: docker login -u ${{ secrets.NCR_ACCESS_KEY }} -p ${{ secrets.NCR_NCR_SECRET_KEY }} ${{ secrets.NCR_URL }}
+      run: docker login -u ${{ secrets.NCR_ACCESS_KEY }} -p ${{ secrets.NCR_SECRET_KEY }} ${{ secrets.NCR_URL }}
 
     - name: Push Docker image
       run: docker push ${{ secrets.NCR_URL }}/cd-jenkins/nginx:${{ steps.read_version.outputs.app_version }}
