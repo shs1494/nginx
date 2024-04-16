@@ -33,7 +33,6 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: develop
         tags: 'v${{ steps.read_version.outputs.app_version }}'
 
     - name: Build Docker image
