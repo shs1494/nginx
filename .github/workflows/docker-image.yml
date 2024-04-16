@@ -4,24 +4,24 @@ on:
   push:
     paths:
       - "testchart/Chart.yaml"
-    branches: [ "devlop" ]
+    branches: [ "develop" ]
 
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-    - name: create-tage
+    - name: checkout
       uses: actions/checkout@v3
 
     - name: Read appVersion from Chart.yaml
       id: read_version
-      run: echo "::set-output name=app_version::$(grep 'appVersion testchart/Chart.yaml | cut -d '"' -f 2)"
+      run: echo "::set-output name=app_version::$(grep 'appVersion' testchart/Chart.yaml | cut -d '"' -f 2)"
 
     - name: Replace appVersion in index.html
-      run: sed -e "s/.*/${{ steps.read_version.outputs.app_version }}/d" index.html
+      run: echo "${{ steps.read_version.outputs.app_version }}" > index.html
 
-    - name: Commit chnage
+    - name: Commit change
       run: |
         git config --global user.name 'editBot'
         git config --global user.email 'actions@users.noreply.github.com'
@@ -29,22 +29,18 @@ jobs:
         git commit -m "Update appVersion in index.html"
         git tag -a "v${{ steps.read_version.outputs.app_version }}" -m "Version v${{ steps.read_version.outputs.app_version }}"
 
-    - name: Push changes and tag
+    - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.MY_GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: develop
-        tags: |
-          v${{ step.read_version.ouputs.app_version}
+        tags: 'v${{ steps.read_version.outputs.app_version }}'
 
     - name: Build Docker image
-      run: docker build -t testNginx .
-
-    - name: Tag Docker image
-      run: docker tag testNginx ${{ secrets.NCR_URL }}/nginx:${{ steps.read_version.outputs.app_version }}
+      run: docker build -t ${{ secrets.NCR_URL }}/cd-jenkins/nginx:${{ steps.read_version.outputs.app_version }} .
 
     - name: Login to Private Docker registry
-      run: docker login -u ${{ secrets.NCR_ACCESS_KEY }} -p ${{ secrets.NCR_NCR_SECRET_KEY }} ${{ secrets.NCR_URL }}
+      run: docker login -u ${{ secrets.NCR_ACCESS_KEY }} -p ${{ secrets.NCR_SECRET_KEY }} ${{ secrets.NCR_URL }}
 
     - name: Push Docker image
       run: docker push ${{ secrets.NCR_URL }}/cd-jenkins/nginx:${{ steps.read_version.outputs.app_version }}
